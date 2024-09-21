@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-class Global extends ChangeNotifier{
+class Global extends ChangeNotifier {
+  //Theme data
   bool _isDarkMode = true;
-   bool get isDarkMode => _isDarkMode;
+
+  bool get isDarkMode => _isDarkMode;
   final ThemeData _lightTheme =
       ThemeData(primarySwatch: Colors.blue, brightness: Brightness.light);
 
@@ -13,7 +15,15 @@ class Global extends ChangeNotifier{
     _isDarkMode = !_isDarkMode; // Toggle the theme mode
     notifyListeners();
   }
-   ThemeData getTheme() {
+
+  ThemeData getTheme() {
     return _isDarkMode ? _darkTheme : _lightTheme;
+  }
+
+  //Title
+   final String _title = "Athikarai EMI";
+
+  String getTitle() {
+    return _title;
   }
 }

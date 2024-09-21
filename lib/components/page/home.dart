@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../utils/global.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -10,14 +13,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.lightBlue,
-          title: const Center(
-            child: Text(
-              "Home",
-            ),
-          ),
-        ));
+    return Consumer<Global>(
+        builder: (context, global, child) => Scaffold(
+                appBar: AppBar(
+              backgroundColor: Colors.lightBlue,
+              title: Center(
+                child: Text(global.getTitle()),
+              ),
+            )));
   }
 }

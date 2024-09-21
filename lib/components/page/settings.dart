@@ -11,10 +11,10 @@ class Settings extends StatelessWidget {
         builder: (context, global, child) => Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.lightBlue,
-                title: const Center(
+                title: Center(
                   child: Text(
-                    "Settings",
-                  ),
+                      // "Settings",
+                      global.getTitle()),
                 ),
               ),
               body: IconButton(
