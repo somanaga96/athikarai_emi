@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -13,12 +12,12 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-      backgroundColor: Colors.lightBlue,
-      title: const Center(
-        child: Text(
-          "Home",
-        ),
-      ),
-    ));
+          backgroundColor: Colors.lightBlue,
+          title: const Center(
+            child: Text(
+              "Home",
+            ),
+          ),
+        ));
   }
 }

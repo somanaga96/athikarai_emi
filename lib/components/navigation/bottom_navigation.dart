@@ -1,5 +1,6 @@
+import 'package:athikarai_emi/components/page/settings.dart';
 import 'package:flutter/material.dart';
-import '../home.dart';
+import '../page/home.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
@@ -15,11 +16,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   void initState() {
     super.initState();
-    screen = const [
-      Home(),
-      Home(),
-      Home(),
-    ];
+    screen = [const Home(), const Home(), const Settings()];
   }
 
   @override
