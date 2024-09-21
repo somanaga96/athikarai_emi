@@ -1,3 +1,4 @@
+import 'package:athikarai_emi/components/page/calc/calc_home.dart';
 import 'package:athikarai_emi/components/page/settings.dart';
 import 'package:flutter/material.dart';
 import '../page/home.dart';
@@ -16,7 +17,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   void initState() {
     super.initState();
-    screen = [const Home(), const Home(), const Settings()];
+    screen = [ const CalcHome(),
+     const Home(), const Settings()];
   }
 
   @override
