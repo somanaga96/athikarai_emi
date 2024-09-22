@@ -25,9 +25,8 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: global.getTitle(),
             theme: global.getTheme(),
-            // home: const BottomNavigation()
-            home: FirestoreExample(),
-            
+            home: const BottomNavigation()
+            // home: FirestoreExample(),
             ));
   }
 }
