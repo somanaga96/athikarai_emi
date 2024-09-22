@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/global.dart';
+import 'home/cards/transaction_card.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -11,34 +12,50 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
+  void initState() {
+    super.initState();
+    Provider.of<Global>(context, listen: false).transactionTotal();
+    Provider.of<Global>(context, listen: false).debt();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
     return Consumer<Global>(
-        builder: (context, global, child) => Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.lightBlue,
-              title: Center(
-                child: Text(global.getTitle()),
+      builder: (context, global, child) => Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.lightBlue,
+          title: Center(
+            child: Text(global.getTitle()),
+          ),
+        ),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              TransactionCard(
+                title: 'Transaction',
+                count: global.count,
+                amount: global.sum.toDouble(),
               ),
-            ),
-            body: Card(
-                color: Colors.grey[1000],
-                // global.getTheme() ? Colors.grey[1000] : Colors.grey[1000],
-                child: SizedBox(
-                  width: screenSize.width / 2.1,
-                  height: screenSize.height / 6,
-                  child: const Column(
-                    children: [
-                      Column(
-                        children: [
-                          Text('Transaction: '),
-                          // Text('Count : ${value.count.toString()}'),
-                          // Text('Amount: ${value.sum.toString()}'),
-                          // Text('date: ${value.selectedDate.toString()}'),
-                        ],
-                      )
-                    ],
-                  ),
-                ))));
+              TransactionCard(
+                title: 'Debt',
+                count: global.debtCount,
+                amount: global.debtSum.toDouble(),
+              ),
+              TransactionCard(
+                title: 'Transaction',
+                count: global.count,
+                amount: global.sum.toDouble(),
+              ),
+              TransactionCard(
+                title: 'Transaction',
+                count: global.count,
+                amount: global.sum.toDouble(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
