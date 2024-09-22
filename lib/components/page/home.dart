@@ -19,6 +19,7 @@ class _HomeState extends State<Home> {
               title: Center(
                 child: Text(global.getTitle()),
               ),
-            )));
+            )
+        ));
   }
 }

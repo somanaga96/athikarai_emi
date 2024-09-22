@@ -38,40 +38,36 @@ class _DetailScreenState extends State<DetailScreen> {
       for (var i = 1; i <= widget.period; i++) {
         interest = _amount * ratePerMonth;
 
-        // Calculate the first day of the current month
-        DateTime firstDayOfMonth = DateTime(currentDate.year, currentDate.month + 1, 1);
+        // Calculate the first day of the current month (with i offset for incrementing months)
+        DateTime firstDayOfMonth =
+            DateTime(currentDate.year, currentDate.month + i, 1);
 
         // Calculate the first Saturday of the month
         int daysToSaturday = (6 - firstDayOfMonth.weekday) % 7;
-        DateTime firstSaturday = firstDayOfMonth.add(Duration(days: daysToSaturday));
+        DateTime firstSaturday =
+            firstDayOfMonth.add(Duration(days: daysToSaturday));
 
         // Format the first Saturday's date
         String formattedDate = DateFormat('dd-MMM-yy').format(firstSaturday);
 
         // Add the row with the first Saturday's date using the new TableRowValueWidget
-      
-   result.add(
-  TableRowValueWidget(
-    index: i,
-    date: formattedDate,
-    amount: _amount,
-    interest: interest,
-    emi: term + interest,
-  ).buildTableRow() // This is correct
-);
+        result.add(TableRowValueWidget(
+          index: i,
+          date: formattedDate,
+          amount: _amount,
+          interest: interest,
+          emi: term + interest,
+        ).buildTableRow(context));
 
-
-        // Subtract the term from the amount
+        // Subtract the term from the amount AFTER calculating interest
         _amount -= term;
-
-        // Increment the current date by one month
-        currentDate = DateTime(currentDate.year, currentDate.month + 1, 1);
       }
       return result;
     }
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.lightBlue,
         title: const Center(
           child: Text("Athikarai EMI"),
         ),
@@ -85,7 +81,7 @@ class _DetailScreenState extends State<DetailScreen> {
               interest: widget.rate,
               canShow: widget.canShow,
             ),
-            const HeadlineWidget(),  // Use the new HeadlineWidget here
+            const HeadlineWidget(), // Use the new HeadlineWidget here
             Table(
               columnWidths: const {
                 0: FlexColumnWidth(3),

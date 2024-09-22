@@ -17,8 +17,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   void initState() {
     super.initState();
-    screen = [ const CalcHome(),
-     const Home(), const Settings()];
+    screen = [const CalcHome(), const Home(), const Settings()];
   }
 
   @override
@@ -32,8 +31,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
           setState(() {
             _selectedIndex = index;
           });
-          // Update title based on selected index
-          // global.updateCurrentPageTitle(_getPageTitle(index));
         },
         selectedFontSize: 18,
         iconSize: 25,

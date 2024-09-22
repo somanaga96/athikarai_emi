@@ -1,7 +1,9 @@
 import 'package:athikarai_emi/components/page/calc/details_screen.dart';
 import 'package:athikarai_emi/components/page/calc/input_widgets/input.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../utils/global.dart';
 import 'emi_result.dart';
 import 'input_widgets/custom_button_name.dart';
 import 'input_widgets/period_input.dart';
@@ -26,54 +28,63 @@ class _CalcHomeState extends State<CalcHome> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            InputField(label: "Amount", controller: amount),
-            PeriodInput(
-              tenureType: _tenureType,
-              switchValue: _switchValue,
-              onSwitchChanged: (value) {
-                setState(() {
-                  _tenureType = value ? _tenureTypes[1] : _tenureTypes[0];
-                  _switchValue = value;
-                });
-              },
-              monthsController: months,
+    return Consumer<Global>(
+        builder: (context, global, child) => Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.lightBlue,
+              title: Center(
+                child: Text(global.getTitle()),
+              ),
             ),
-            InputField(label: "Interest", controller: rate),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                CustomButton(
-                  buttonName: "Calculate",
-                  onPressed: _calculate,
+            body: GestureDetector(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    InputField(label: "Amount", controller: amount),
+                    PeriodInput(
+                      tenureType: _tenureType,
+                      switchValue: _switchValue,
+                      onSwitchChanged: (value) {
+                        setState(() {
+                          _tenureType =
+                              value ? _tenureTypes[1] : _tenureTypes[0];
+                          _switchValue = value;
+                        });
+                      },
+                      monthsController: months,
+                    ),
+                    InputField(label: "Interest", controller: rate),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        CustomButton(
+                          buttonName: "Calculate",
+                          onPressed: _calculate,
+                        ),
+                        CustomButton(
+                          buttonName: "Reset",
+                          onPressed: _reset,
+                        ),
+                        if (canShow)
+                          CustomButton(
+                            buttonName: "Details",
+                            onPressed: _showDetails,
+                          ),
+                      ],
+                    ),
+                    if (canShow)
+                      EmiResult(
+                        amount: amount.text,
+                        interest: rate.text,
+                        canShow: canShow,
+                        period: period,
+                      )
+                    else
+                      Container(),
+                  ],
                 ),
-                CustomButton(
-                  buttonName: "Reset",
-                  onPressed: _reset,
-                ),
-                if (canShow)
-                  CustomButton(
-                    buttonName: "Details",
-                    onPressed: _showDetails,
-                  ),
-              ],
-            ),
-            if (canShow)
-              EmiResult(
-                amount: amount.text,
-                interest: rate.text,
-                canShow: canShow,
-                period: period,
-              )
-            else
-              Container(),
-          ],
-        ),
-      ),
-    );
+              ),
+            )));
   }
 
   void _calculate() {

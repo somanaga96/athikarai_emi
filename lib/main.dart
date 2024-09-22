@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return Consumer<Global>(
         builder: (context, global, child) => MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
+            title: global.getTitle(),
             theme: global.getTheme(),
             home: const BottomNavigation()));
   }

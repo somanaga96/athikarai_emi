@@ -16,14 +16,39 @@ class TableRowValueWidget {
   });
 
   // Returns a TableRow
-  TableRow buildTableRow() {
+  TableRow buildTableRow(BuildContext context) {
+    // Get the width of the screen
+    double screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    // Define padding as a percentage of screen width
+    double paddingValue = screenWidth * 0.02; // 2% of the screen width
+
     return TableRow(
       children: [
-        Text(date, style: const TextStyle(fontSize: 18.0)),
-        Text(amount.toStringAsFixed(1), style: const TextStyle(fontSize: 20.0)),
-        Text(interest.toStringAsFixed(2), style: const TextStyle(fontSize: 20.0)),
-        Text(emi.toStringAsFixed(1), style: const TextStyle(fontSize: 20.0)),
+        Padding(
+          padding: EdgeInsets.all(paddingValue),
+          child: Text(date, style: const TextStyle(fontSize: 18.0)),
+        ),
+        Padding(
+          padding: EdgeInsets.all(paddingValue),
+          child: Text(amount.toStringAsFixed(0),
+              style: const TextStyle(fontSize: 20.0)),
+        ),
+        Padding(
+          padding: EdgeInsets.all(paddingValue),
+          child: Text(interest.toStringAsFixed(0),
+              style: const TextStyle(fontSize: 20.0)),
+        ),
+        Padding(
+          padding: EdgeInsets.all(paddingValue),
+          child: Text(
+              emi.toStringAsFixed(0), style: const TextStyle(fontSize: 20.0)),
+        ),
       ],
     );
   }
+
 }

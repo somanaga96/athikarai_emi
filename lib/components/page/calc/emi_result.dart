@@ -1,6 +1,9 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../utils/global.dart';
 
 class EmiResult extends StatelessWidget {
   final String amount;
@@ -40,14 +43,15 @@ class EmiResult extends StatelessWidget {
     }
     totalAmount = double.parse(amount) + interestSum;
 
-    return Container(
+    return Consumer<Global>(
+        builder: (context, global, child) => Container(
       margin: const EdgeInsets.only(top: 30),
       child: canShow
           ? Column(children: [
         Table(
             defaultColumnWidth: const FixedColumnWidth(170.0),
             border: TableBorder.all(
-                color: Colors.black, style: BorderStyle.solid, width: 2),
+                color: Colors.blue, style: BorderStyle.solid, width: 2),
             children: [
               TableRow(children: [
                 const Column(children: [
@@ -63,7 +67,7 @@ class EmiResult extends StatelessWidget {
                       style: TextStyle(fontSize: 20.0))
                 ]),
                 Column(children: [
-                  Text(interestSum.toStringAsFixed(2),
+                  Text(interestSum.toStringAsFixed(0),
                       style: const TextStyle(fontSize: 20.0))
                 ]),
               ]),
@@ -73,13 +77,13 @@ class EmiResult extends StatelessWidget {
                       style: TextStyle(fontSize: 20.0))
                 ]),
                 Column(children: [
-                  Text(totalAmount.toStringAsFixed(2),
+                  Text(totalAmount.toStringAsFixed(0),
                       style: const TextStyle(fontSize: 20.0))
                 ]),
               ]),
             ]),
       ])
           : Container(),
-    );
+    ));
   }
 }
