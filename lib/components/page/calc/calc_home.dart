@@ -102,7 +102,27 @@ class _CalcHomeState extends State<CalcHome> {
   }
 
   void _calculate() {
-    if (amount.text.isNotEmpty && months.text.isNotEmpty) {
+    if (amount.text.isEmpty || months.text.isEmpty || rate.text.isEmpty) {
+      // Show error dialog if any of the fields are empty
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text(
+                'Please fill all fields (Amount, Months, and Interest) to calculate the EMI.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
       setState(() {
         canShow = true;
         period = _tenureType == "Years"
