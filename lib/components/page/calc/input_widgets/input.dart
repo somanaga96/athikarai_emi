@@ -4,8 +4,7 @@ class InputField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
 
-  const InputField({Key? key, required this.label, required this.controller})
-      : super(key: key);
+  const InputField({super.key, required this.label, required this.controller});
 
   @override
   Widget build(BuildContext context) {

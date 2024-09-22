@@ -1,5 +1,4 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,12 +11,12 @@ class EmiResult extends StatelessWidget {
   final bool canShow;
 
   const EmiResult({
-    Key? key,
+    super.key,
     required this.amount,
     required this.canShow,
     required this.interest,
     required this.period,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

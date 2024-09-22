@@ -17,13 +17,19 @@ class Settings extends StatelessWidget {
                       global.getTitle()),
                 ),
               ),
-              body: IconButton(
-                onPressed: () {
-                  global.toggleTheme();
-                },
-                icon: Icon(global.isDarkMode
-                    ? Icons.dark_mode_rounded
-                    : Icons.wb_sunny),
+              body: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const Text("Select the theme"),
+                  IconButton(
+                    onPressed: () {
+                      global.toggleTheme();
+                    },
+                    icon: Icon(global.isDarkMode
+                        ? Icons.dark_mode_rounded
+                        : Icons.wb_sunny),
+                  ),
+                ],
               ),
             ));
   }

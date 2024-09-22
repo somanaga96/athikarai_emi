@@ -1,4 +1,4 @@
-import 'package:athikarai_emi/components/page/calc/details_screen.dart';
+import 'package:athikarai_emi/components/page/details_screen.dart';
 import 'package:athikarai_emi/components/page/calc/input_widgets/input.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

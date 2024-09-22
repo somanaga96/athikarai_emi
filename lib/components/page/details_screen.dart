@@ -17,8 +17,8 @@ class DetailScreen extends StatefulWidget {
     this.period,
     this.canShow,
     this.dateTime, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -86,7 +86,7 @@ class _DetailScreenState extends State<DetailScreen> {
             const HeadlineWidget(), // Use the new HeadlineWidget here
             Table(
               columnWidths: const {
-                0: FlexColumnWidth(3),
+                0: FlexColumnWidth(4),
                 1: FlexColumnWidth(3),
                 2: FlexColumnWidth(3),
                 3: FlexColumnWidth(3),

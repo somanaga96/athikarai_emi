@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class HeadlineWidget extends StatelessWidget {
-  const HeadlineWidget({Key? key}) : super(key: key);
+  const HeadlineWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

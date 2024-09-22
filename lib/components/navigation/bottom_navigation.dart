@@ -17,7 +17,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   void initState() {
     super.initState();
-    screen = [const CalcHome(), const Home(), const Settings()];
+    screen = [const Home(), const CalcHome(), const Settings()];
   }
 
   @override
@@ -41,8 +41,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.attach_money),
-            label: 'Debt',
+            icon: Icon(Icons.calculate_outlined),
+            label: 'Calc',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

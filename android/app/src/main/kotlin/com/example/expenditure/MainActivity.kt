@@ -1,4 +1,4 @@
-package com.example.athikarai_emi
+package com.example.expenditure
 
 import io.flutter.embedding.android.FlutterActivity
 
