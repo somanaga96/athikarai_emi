@@ -9,12 +9,14 @@ class DetailScreen extends StatefulWidget {
   final String rate;
   final double period;
   final bool canShow;
+  final DateTime dateTime;
 
   const DetailScreen(
     this.amount,
     this.rate,
     this.period,
-    this.canShow, {
+    this.canShow,
+    this.dateTime, {
     Key? key,
   }) : super(key: key);
 
@@ -33,7 +35,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
     List<TableRow> ans() {
       List<TableRow> result = [];
-      DateTime currentDate = DateTime.now(); // Start with the current date
+      DateTime currentDate = widget.dateTime; // Start with the current date
 
       for (var i = 1; i <= widget.period; i++) {
         interest = _amount * ratePerMonth;

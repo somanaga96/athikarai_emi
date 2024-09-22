@@ -1,6 +1,7 @@
 import 'package:athikarai_emi/components/page/calc/details_screen.dart';
 import 'package:athikarai_emi/components/page/calc/input_widgets/input.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/global.dart';
@@ -25,6 +26,7 @@ class _CalcHomeState extends State<CalcHome> {
 
   bool canShow = false;
   double period = 0;
+  DateTime dateTime = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,18 @@ class _CalcHomeState extends State<CalcHome> {
                       monthsController: months,
                     ),
                     InputField(label: "Interest", controller: rate),
+                    ElevatedButton(
+                        child: Text(
+                            DateFormat().addPattern('d/M/y').format(dateTime)),
+                        onPressed: () async {
+                          DateTime? newDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2022),
+                              lastDate: DateTime.now());
+                          if (newDate == null) return;
+                          setState(() => dateTime = newDate);
+                        }),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -111,12 +125,8 @@ class _CalcHomeState extends State<CalcHome> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DetailScreen(
-          amount.text,
-          rate.text,
-          period,
-          canShow,
-        ),
+        builder: (context) =>
+            DetailScreen(amount.text, rate.text, period, canShow, dateTime),
       ),
     );
   }

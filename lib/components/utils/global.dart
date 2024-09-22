@@ -21,9 +21,20 @@ class Global extends ChangeNotifier {
   }
 
   //Title
-   final String _title = "Athikarai EMI";
+  final String _title = "Athikarai EMI";
 
   String getTitle() {
     return _title;
   }
+
+  //DateTime
+  // DateTime _dateTime = DateTime.now();
+  //
+  // DateTime getDateTime() {
+  //   return _dateTime;
+  // }
+  //
+  // void setDateTime(DateTime date) {
+  //   _dateTime = date;
+  // }
 }
