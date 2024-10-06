@@ -1,4 +1,5 @@
 import 'package:athikarai_emi/components/page/home/debts/debt_class.dart';
+import 'package:athikarai_emi/components/page/home/user/UserTool.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +55,6 @@ class Global extends ChangeNotifier {
 //Debt
   int _debtSum = 0;
   int _debtCount = 0;
-
   List<Debt> _debtLiveTransactionList = [];
 
   void debt() async {
@@ -82,7 +82,7 @@ class Global extends ChangeNotifier {
     try {
       DebtTool tools = DebtTool();
       List<Debt> transactions = await tools.fetchLiveDebtTransaction();
-      print('Fetched Transactions: $transactions');
+      // print('Fetched Transactions: $transactions');
       _debtLiveTransactionList.addAll(transactions);
       notifyListeners(); // Notify listeners after adding transactions
     } catch (error) {
@@ -91,4 +91,43 @@ class Global extends ChangeNotifier {
   }
 
   List<Debt> get debtLiveTransactionList => _debtLiveTransactionList;
+
+//User
+  int _userDebtSum = 0;
+  int _userDebtCount = 0;
+  List<Debt> _userLiveDebtList = [];
+
+  void userDebt(String name) async {
+    _userDebtSum = 0;
+    _userDebtCount = 0;
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('debt')
+        .where('name', isEqualTo: name)
+        .get();
+    for (var doc in querySnapshot.docs) {
+      _userDebtSum += int.parse(doc.data()['amount'].toString());
+      _userDebtCount = _userDebtCount + 1;
+    }
+    notifyListeners();
+  }
+
+  int get userDebtSum => _userDebtSum;
+
+  int get userDebtCount => _userDebtCount;
+
+  void fetchUserLiveDebtList(String name) async {
+    _debtLiveTransactionList.clear();
+    try {
+      UserTool tool = UserTool();
+      List<Debt> transactions = await tool.fetchUserDebtLiveTransaction(name);
+      // print('Fetched Transactions: $transactions');
+      _debtLiveTransactionList.addAll(transactions);
+      notifyListeners(); // Notify listeners after adding transactions
+    } catch (error) {
+      print('Error fetching transactions: $error');
+    }
+  }
+
+  List<Debt> get userLiveDebtList => _userLiveDebtList;
 }

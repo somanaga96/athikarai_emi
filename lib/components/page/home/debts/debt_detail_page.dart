@@ -67,8 +67,7 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                       showFirstView = !showFirstView; // Toggle the view
                     });
                   },
-                  child: Text(
-                      showFirstView ? 'Show Second View' : 'Show First View'),
+                  child: Text(showFirstView ? 'Open loans' : 'Closed loans'),
                 ),
               ),
               Stack(
@@ -79,7 +78,7 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                     child: SizedBox(
                       width: screenSize.width,
                       height: screenSize.height / 2,
-                      child: DebtTransactions(),
+                      child: const DebtTransactions(),
                     ),
                   ),
                   // Second view

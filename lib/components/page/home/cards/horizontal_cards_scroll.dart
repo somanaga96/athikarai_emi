@@ -45,7 +45,7 @@ class _CardHorizontalScrollViewState extends State<CardHorizontalScrollView> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>  DebtDetailPage(),
+                    builder: (context) => const DebtDetailPage(),
                   ),
                 );
               },

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/global.dart';
+import '../user/user_debt_details.dart';
 
 class DebtTransactions extends StatefulWidget {
   const DebtTransactions({super.key});
@@ -23,11 +24,8 @@ class _DebtTransactionsState extends State<DebtTransactions> {
     return Consumer<Global>(
       builder: (context, global, child) {
         if (global.debtLiveTransactionList.isEmpty) {
-          // Show loading indicator if data is not yet loaded
           return const Center(child: CircularProgressIndicator());
         }
-
-        // If data is loaded, display it in the list
         return ListView.builder(
           shrinkWrap: true,
           itemCount: global.debtLiveTransactionList.length,
@@ -35,6 +33,7 @@ class _DebtTransactionsState extends State<DebtTransactions> {
             final DateFormat formatter = DateFormat('d-MMM-yy');
             String dateAndMonth =
                 formatter.format(global.debtLiveTransactionList[index].date);
+
             return Container(
               margin: const EdgeInsets.all(3),
               decoration: BoxDecoration(
@@ -42,27 +41,26 @@ class _DebtTransactionsState extends State<DebtTransactions> {
                 borderRadius: BorderRadius.circular(25.0),
               ),
               child: ListTile(
-                subtitle: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          '${global.debtLiveTransactionList[index].name} : ${global.debtLiveTransactionList[index].amount}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          dateAndMonth,
-                          style: const TextStyle(
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                title: Text(
+                  '${global.debtLiveTransactionList[index].name} : ${global.debtLiveTransactionList[index].amount}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                subtitle: Text(
+                  dateAndMonth,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                ),
+                onTap: () {
+                  // Navigate to the DebtDetailsPage when a row is clicked
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UserDetails(
+                          name: global.debtLiveTransactionList[index].name),
+                    ),
+                  );
+                },
               ),
             );
           },
