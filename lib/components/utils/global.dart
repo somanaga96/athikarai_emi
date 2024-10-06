@@ -1,5 +1,8 @@
+import 'package:athikarai_emi/components/page/home/debts/debt_class.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../page/home/debts/DebtTool.dart';
 
 class Global extends ChangeNotifier {
   //Theme data
@@ -50,17 +53,19 @@ class Global extends ChangeNotifier {
 
 //Debt
   int _debtSum = 0;
-
   int _debtCount = 0;
+
+  List<Debt> _debtLiveTransactionList = [];
 
   void debt() async {
     _debtSum = 0;
     _debtCount = 0;
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
-        .instance
-        .collection('debt')
-        .where('status', isEqualTo: true)
-        .get();
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await FirebaseFirestore.instance
+            .collection('debt')
+            // .where('status', isEqualTo: true)
+            // .where('status', isEqualTo: true)
+            .get();
     for (var doc in querySnapshot.docs) {
       _debtSum += int.parse(doc.data()['amount'].toString());
       _debtCount = _debtCount + 1;
@@ -71,4 +76,19 @@ class Global extends ChangeNotifier {
   int get debtCount => _debtCount;
 
   int get debtSum => _debtSum;
+
+  void fetchDebtLiveTransactionList() async {
+    _debtLiveTransactionList.clear();
+    try {
+      DebtTool tools = DebtTool();
+      List<Debt> transactions = await tools.fetchLiveDebtTransaction();
+      print('Fetched Transactions: $transactions');
+      _debtLiveTransactionList.addAll(transactions);
+      notifyListeners(); // Notify listeners after adding transactions
+    } catch (error) {
+      print('Error fetching transactions: $error');
+    }
+  }
+
+  List<Debt> get debtLiveTransactionList => _debtLiveTransactionList;
 }

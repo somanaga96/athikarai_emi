@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/global.dart';
-import 'home/cards/transaction_card.dart';
+import 'home/cards/horizontal_cards_scroll.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -28,30 +28,11 @@ class _HomeState extends State<Home> {
             child: Text(global.getTitle()),
           ),
         ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
+        body: const SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
             children: [
-              TransactionCard(
-                title: 'Transaction',
-                count: global.count,
-                amount: global.sum.toDouble(),
-              ),
-              TransactionCard(
-                title: 'Debt',
-                count: global.debtCount,
-                amount: global.debtSum.toDouble(),
-              ),
-              TransactionCard(
-                title: 'Transaction',
-                count: global.count,
-                amount: global.sum.toDouble(),
-              ),
-              TransactionCard(
-                title: 'Transaction',
-                count: global.count,
-                amount: global.sum.toDouble(),
-              ),
+              CardHorizontalScrollView(),
             ],
           ),
         ),
