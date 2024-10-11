@@ -3,37 +3,54 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/global.dart';
-import '../user/user_debt_details.dart';
 
-class DebtTransactions extends StatefulWidget {
-  const DebtTransactions({super.key});
+class UsedClosedLoans extends StatefulWidget {
+  final String name;
+
+  const UsedClosedLoans({
+    super.key,
+    required this.name,
+  });
 
   @override
-  State<DebtTransactions> createState() => _DebtTransactionsState();
+  State<UsedClosedLoans> createState() => _UsedClosedLoansState();
 }
 
-class _DebtTransactionsState extends State<DebtTransactions> {
+class _UsedClosedLoansState extends State<UsedClosedLoans> {
+  bool isLoading = true; // To handle loading state
   @override
   void initState() {
     super.initState();
-    Provider.of<Global>(context, listen: false).fetchDebtLiveTransactionList();
+    // Provider.of<Global>(context, listen: false).fetchUserDebtList(widget.name);
+    // Simulating a delay before loading the data
+    Future.delayed(const Duration(seconds: 10), () {
+      setState(() {
+        isLoading = false; // After the delay, change the loading state
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Global>(
       builder: (context, global, child) {
-        if (global.debtLiveTransactionList.isEmpty) {
+        // Check if it's still in the loading state
+        if (isLoading) {
           return const Center(child: CircularProgressIndicator());
+        }
+
+        // After the delay, check if the list is empty
+        if (global.userDebtClosedTransactionList.isEmpty) {
+          return Center(
+              child: Text('${widget.name} not having closed loans...'));
         }
         return ListView.builder(
           shrinkWrap: true,
-          itemCount: global.debtLiveTransactionList.length,
+          itemCount: global.userDebtClosedTransactionList.length,
           itemBuilder: (BuildContext context, int index) {
             final DateFormat formatter = DateFormat('d-MMM-yy');
-            String dateAndMonth =
-                formatter.format(global.debtLiveTransactionList[index].date);
-
+            String dateAndMonth = formatter
+                .format(global.userDebtClosedTransactionList[index].date);
             return Container(
               margin: const EdgeInsets.all(3),
               decoration: BoxDecoration(
@@ -42,7 +59,7 @@ class _DebtTransactionsState extends State<DebtTransactions> {
               ),
               child: ListTile(
                 title: Text(
-                  '${global.debtLiveTransactionList[index].name} : ${global.debtLiveTransactionList[index].amount}',
+                  '${global.userDebtClosedTransactionList[index].name} : ${global.userDebtClosedTransactionList[index].amount}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -51,16 +68,6 @@ class _DebtTransactionsState extends State<DebtTransactions> {
                   dateAndMonth,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
-                onTap: () {
-                  // Navigate to the DebtDetailsPage when a row is clicked
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => UserDetails(
-                          name: global.debtLiveTransactionList[index].name),
-                    ),
-                  );
-                },
               ),
             );
           },

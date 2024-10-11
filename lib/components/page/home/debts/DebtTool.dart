@@ -8,7 +8,50 @@ class DebtTool extends ChangeNotifier {
 
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await FirebaseFirestore.instance.collection('debt').get();
+          await FirebaseFirestore.instance
+              .collection('debt')
+              .where("status", isEqualTo: true)
+              .get();
+
+      // Check if there are documents in the querySnapshot
+      print('Number of documents fetched: ${querySnapshot.docs.length}');
+
+      for (var doc in querySnapshot.docs) {
+        DateTime date = (doc.data()['date'] as Timestamp).toDate();
+
+        // Create the Debt object
+        Debt yourObject = Debt(
+            id: doc.id,
+            amount: doc.data()['amount'],
+            date: date,
+            name: doc.data()['name'],
+            status: doc.data()['status']);
+        objectList.add(yourObject);
+        print('Debt added: ${yourObject.name}, Amount: ${yourObject.amount}');
+      }
+
+      // Notify listeners to update the UI
+      notifyListeners();
+
+      // Print the entire list
+      print('Final debt list: $objectList');
+      return objectList;
+    } catch (e) {
+      // Print any errors for debugging
+      print('Error fetching debt transactions: $e');
+      return [];
+    }
+  }
+
+  Future<List<Debt>> fetchClosedDebtTransaction() async {
+    List<Debt> objectList = [];
+
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('debt')
+              .where("status", isEqualTo: false)
+              .get();
 
       // Check if there are documents in the querySnapshot
       print('Number of documents fetched: ${querySnapshot.docs.length}');

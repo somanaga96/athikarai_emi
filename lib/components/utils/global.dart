@@ -1,9 +1,8 @@
+import 'package:athikarai_emi/components/page/home/debts/DebtTool.dart';
 import 'package:athikarai_emi/components/page/home/debts/debt_class.dart';
-import 'package:athikarai_emi/components/page/home/user/UserTool.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import '../page/home/debts/DebtTool.dart';
+import '../page/home/user_debt/UserTool.dart';
 
 class Global extends ChangeNotifier {
   //Theme data
@@ -52,20 +51,66 @@ class Global extends ChangeNotifier {
 
   int get count => _count;
 
-//Debt
+// Debt
+
+  List<Debt> _debtLiveTransactionList = [];
+  List<Debt> _debtClosedTransactionList = [];
+
+  void fetchDebtList() async {
+    _debtLiveTransactionList.clear();
+    _debtClosedTransactionList.clear();
+    try {
+      DebtTool tool = DebtTool();
+      List<Debt> liveTransactions = await tool.fetchLiveDebtTransaction();
+      List<Debt> closedTransactions = await tool.fetchClosedDebtTransaction();
+      _debtLiveTransactionList.addAll(liveTransactions);
+      _debtClosedTransactionList.addAll(closedTransactions);
+      notifyListeners(); // Notify listeners after adding transactions
+    } catch (error) {
+      print('Error fetching transactions: $error');
+    }
+  }
+
+  List<Debt> get debtLiveTransactionList => _debtLiveTransactionList;
+
+  List<Debt> get debtClosedTransactionList => _debtClosedTransactionList;
+
+//User Debt
+
+  List<Debt> _userDebtLiveTransactionList = [];
+  List<Debt> _userDebtClosedTransactionList = [];
+
+  void fetchUserDebtList(String name) async {
+    _userDebtLiveTransactionList.clear();
+    _userDebtClosedTransactionList.clear();
+    try {
+      UserTool tool = UserTool();
+      List<Debt> liveTransactions =
+          await tool.fetchUserDebtLiveTransaction(name);
+      List<Debt> closedTransactions =
+          await tool.fetchUserDebtClosedTransaction(name);
+      _userDebtLiveTransactionList.addAll(liveTransactions);
+      _userDebtClosedTransactionList.addAll(closedTransactions);
+      notifyListeners(); // Notify listeners after adding transactions
+    } catch (error) {
+      print('Error fetching transactions: $error');
+    }
+  }
+
+  List<Debt> get userDebtLiveTransactionList => _userDebtLiveTransactionList;
+
+  List<Debt> get userDebtClosedTransactionList =>
+      _userDebtClosedTransactionList;
+
+  //debt overall
   int _debtSum = 0;
   int _debtCount = 0;
-  List<Debt> _debtLiveTransactionList = [];
 
   void debt() async {
     _debtSum = 0;
     _debtCount = 0;
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
-        await FirebaseFirestore.instance
-            .collection('debt')
-            // .where('status', isEqualTo: true)
-            // .where('status', isEqualTo: true)
-            .get();
+        await FirebaseFirestore.instance.collection('debt').get();
     for (var doc in querySnapshot.docs) {
       _debtSum += int.parse(doc.data()['amount'].toString());
       _debtCount = _debtCount + 1;
@@ -77,57 +122,27 @@ class Global extends ChangeNotifier {
 
   int get debtSum => _debtSum;
 
-  void fetchDebtLiveTransactionList() async {
-    _debtLiveTransactionList.clear();
-    try {
-      DebtTool tools = DebtTool();
-      List<Debt> transactions = await tools.fetchLiveDebtTransaction();
-      // print('Fetched Transactions: $transactions');
-      _debtLiveTransactionList.addAll(transactions);
-      notifyListeners(); // Notify listeners after adding transactions
-    } catch (error) {
-      print('Error fetching transactions: $error');
-    }
-  }
-
-  List<Debt> get debtLiveTransactionList => _debtLiveTransactionList;
-
-//User
+  //User
   int _userDebtSum = 0;
   int _userDebtCount = 0;
-  List<Debt> _userLiveDebtList = [];
-
-  void userDebt(String name) async {
-    _userDebtSum = 0;
-    _userDebtCount = 0;
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
-        .instance
-        .collection('debt')
-        .where('name', isEqualTo: name)
-        .get();
-    for (var doc in querySnapshot.docs) {
-      _userDebtSum += int.parse(doc.data()['amount'].toString());
-      _userDebtCount = _userDebtCount + 1;
-    }
-    notifyListeners();
-  }
 
   int get userDebtSum => _userDebtSum;
 
   int get userDebtCount => _userDebtCount;
-
-  void fetchUserLiveDebtList(String name) async {
-    _debtLiveTransactionList.clear();
-    try {
-      UserTool tool = UserTool();
-      List<Debt> transactions = await tool.fetchUserDebtLiveTransaction(name);
-      // print('Fetched Transactions: $transactions');
-      _debtLiveTransactionList.addAll(transactions);
-      notifyListeners(); // Notify listeners after adding transactions
-    } catch (error) {
-      print('Error fetching transactions: $error');
-    }
-  }
-
-  List<Debt> get userLiveDebtList => _userLiveDebtList;
 }
+
+// List<Debt> get userLiveDebtList => _userLiveDebtList;
+
+// void fetchDebtLiveTransactionList() async {
+//   _debtLiveTransactionList.clear();
+//   _debtClosedTransactionList.clear();
+//   try {
+//     DebtTool tools = DebtTool();
+//     List<Debt> transactions = await tools.fetchLiveDebtTransaction();
+//     // print('Fetched Transactions: $transactions');
+//     _debtLiveTransactionList.addAll(transactions);
+//     notifyListeners(); // Notify listeners after adding transactions
+//   } catch (error) {
+//     print('Error fetching transactions: $error');
+//   }
+// }

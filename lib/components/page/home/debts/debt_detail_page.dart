@@ -1,8 +1,9 @@
+import 'package:athikarai_emi/components/page/home/debts/closed_loans.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/global.dart';
-import 'debt_transactions.dart';
+import 'open_loans.dart';
 
 class DebtDetailPage extends StatefulWidget {
   const DebtDetailPage({super.key});
@@ -19,7 +20,7 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
   void initState() {
     super.initState();
     Provider.of<Global>(context, listen: false).debt();
-    Provider.of<Global>(context, listen: false).debtLiveTransactionList;
+    Provider.of<Global>(context, listen: false).fetchDebtList();
   }
 
   @override
@@ -78,18 +79,17 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                     child: SizedBox(
                       width: screenSize.width,
                       height: screenSize.height / 2,
-                      child: const DebtTransactions(),
+                      child: const OpenLoans(),
                     ),
                   ),
                   // Second view
                   Visibility(
                     visible: !showFirstView,
-                    child: Container(
-                      color: Colors.lightBlueAccent,
+                    child: SizedBox(
                       width: screenSize.width,
                       height: screenSize.height / 2,
                       // Adjust height as needed
-                      child: const Center(child: Text('Second View')),
+                      child: const ClosedLoans(),
                     ),
                   ),
                 ],
