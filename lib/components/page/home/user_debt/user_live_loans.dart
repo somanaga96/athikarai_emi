@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'dart:async'; // To use Future.delayed
 
 import '../../../utils/global.dart';
 
@@ -15,19 +14,17 @@ class UserLiveLoans extends StatefulWidget {
 }
 
 class _UserLiveLoansState extends State<UserLiveLoans> {
-  bool isLoading = true; // To handle loading state
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    fetchData();
+  }
 
-    // Provider.of<Global>(context, listen: false).fetchUserDebtList(widget.name);
-
-    // Simulating a delay before loading the data
-    Future.delayed(const Duration(seconds: 10), () {
-      setState(() {
-        isLoading = false; // After the delay, change the loading state
-      });
+  void fetchData() async {
+    setState(() {
+      isLoading = false;
     });
   }
 

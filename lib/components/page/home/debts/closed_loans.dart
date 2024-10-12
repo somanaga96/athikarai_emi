@@ -18,14 +18,12 @@ class _ClosedLoansState extends State<ClosedLoans> {
   @override
   void initState() {
     super.initState();
+    fetchData();
+  }
 
-    // Provider.of<Global>(context, listen: false).fetchUserDebtList(widget.name);
-
-    // Simulating a delay before loading the data
-    Future.delayed(const Duration(seconds: 10), () {
-      setState(() {
-        isLoading = false; // After the delay, change the loading state
-      });
+  void fetchData() async {
+    setState(() {
+      isLoading = false;
     });
   }
 

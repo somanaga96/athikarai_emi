@@ -17,16 +17,17 @@ class UsedClosedLoans extends StatefulWidget {
 }
 
 class _UsedClosedLoansState extends State<UsedClosedLoans> {
-  bool isLoading = true; // To handle loading state
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
-    // Provider.of<Global>(context, listen: false).fetchUserDebtList(widget.name);
-    // Simulating a delay before loading the data
-    Future.delayed(const Duration(seconds: 10), () {
-      setState(() {
-        isLoading = false; // After the delay, change the loading state
-      });
+    fetchData();
+  }
+
+  void fetchData() async {
+    setState(() {
+      isLoading = false;
     });
   }
 

@@ -3,6 +3,68 @@ import 'package:flutter/cupertino.dart';
 import 'debt_class.dart';
 
 class DebtTool extends ChangeNotifier {
+  //live debt count
+  int liveDebtCount = 0;
+
+  Future<int> liveDebtCounts() async {
+    liveDebtCount = 0;
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('debt')
+        .where('status', isEqualTo: true)
+        .get();
+    notifyListeners();
+    return querySnapshot.size;
+  }
+
+//closed debt count
+  int closedDebtCount = 0;
+
+  Future<int> closedDebtCounts() async {
+    closedDebtCount = 0;
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('debt')
+        .where('status', isEqualTo: false)
+        .get();
+    notifyListeners();
+    return querySnapshot.size;
+  }
+
+  //live debt sum
+  double liveDebtSum = 0;
+
+  Future<double> liveDebtSums() async {
+    liveDebtSum = 0;
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('debt')
+        .where('status', isEqualTo: true)
+        .get();
+    for (var doc in querySnapshot.docs) {
+      liveDebtSum += int.parse(doc.data()['amount'].toString());
+    }
+    notifyListeners();
+    return liveDebtSum;
+  }
+
+  //closed debt sum
+  double closedDebtSum = 0;
+
+  Future<double> closedDebtSums() async {
+    closedDebtSum = 0;
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('debt')
+        .where('status', isEqualTo: false)
+        .get();
+    for (var doc in querySnapshot.docs) {
+      closedDebtSum += int.parse(doc.data()['amount'].toString());
+    }
+    notifyListeners();
+    return closedDebtSum;
+  }
+
   Future<List<Debt>> fetchLiveDebtTransaction() async {
     List<Debt> objectList = [];
 

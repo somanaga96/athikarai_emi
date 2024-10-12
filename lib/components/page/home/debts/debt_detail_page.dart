@@ -19,7 +19,7 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<Global>(context, listen: false).debt();
+    // Provider.of<Global>(context, listen: false).debt();
     Provider.of<Global>(context, listen: false).fetchDebtList();
   }
 
@@ -48,9 +48,15 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                           children: [
                             Column(
                               children: [
-                                Text('Count: ${global.debtCount}'),
                                 Text(
-                                    'Amount: \$${global.debtSum.toStringAsFixed(0)}'),
+                                  showFirstView
+                                      ? 'Live Debt details'
+                                      : 'Closed Debt details',
+                                ),
+                                Text(
+                                    'Count: ${showFirstView ? global.debtLiveCount : global.debtClosedCount}'),
+                                Text(
+                                    'Amount: ${showFirstView ? global.debtLiveSum : global.debtClosedSum}'),
                               ],
                             )
                           ],

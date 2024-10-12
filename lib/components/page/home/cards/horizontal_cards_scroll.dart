@@ -50,12 +50,26 @@ class _CardHorizontalScrollViewState extends State<CardHorizontalScrollView> {
                 );
               },
               child: TransactionCard(
-                title: 'Debt',
-                count: global.debtCount,
-                amount: global.debtSum.toDouble(),
+                title: 'Live Debt',
+                count: global.debtLiveCount,
+                amount: global.debtLiveSum.toDouble(),
               ),
             ),
-            // Add more TransactionCards with onTap events if needed
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DebtDetailPage(),
+                  ),
+                );
+              },
+              child: TransactionCard(
+                title: 'Closed Debt',
+                count: global.debtClosedCount,
+                amount: global.debtClosedSum.toDouble(),
+              ),
+            ),
           ],
         ),
       ),

@@ -19,7 +19,8 @@ class _UserLoansState extends State<UserLoans> {
   @override
   void initState() {
     super.initState();
-    Provider.of<Global>(context, listen: false).fetchUserDebtList(widget.name);
+    Provider.of<Global>(context, listen: false).userLiveDebtCounts(widget.name);
+    Provider.of<Global>(context, listen: false).userLiveDebtSums(widget.name);
   }
 
   @override
@@ -45,9 +46,13 @@ class _UserLoansState extends State<UserLoans> {
                         height: screenSize.height / 10,
                         child: Column(
                           children: [
-                            const Text('Debt detail'),
-                            Text('Count :${global.userDebtCount}'),
-                            Text('Total Loan :${global.userDebtSum}'),
+                            Text(
+                              showFirstView ? 'Live Debt details' : 'Closed Debt details',
+                            ),
+                            Text(
+                                'Count :${showFirstView ? global.userLiveDebtCount : global.userClosedDebtCount}'),
+                            Text(
+                                'Total Loan :${showFirstView ? global.userLiveDebtSum : global.userClosedDebtSum}'),
                           ],
                         ),
                       ),

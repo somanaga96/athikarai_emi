@@ -16,7 +16,7 @@ class Global extends ChangeNotifier {
       ThemeData(primarySwatch: Colors.blue, brightness: Brightness.dark);
 
   void toggleTheme() {
-    _isDarkMode = !_isDarkMode; // Toggle the theme mode
+    _isDarkMode = !_isDarkMode;
     notifyListeners();
   }
 
@@ -52,7 +52,6 @@ class Global extends ChangeNotifier {
   int get count => _count;
 
 // Debt
-
   List<Debt> _debtLiveTransactionList = [];
   List<Debt> _debtClosedTransactionList = [];
 
@@ -102,47 +101,58 @@ class Global extends ChangeNotifier {
   List<Debt> get userDebtClosedTransactionList =>
       _userDebtClosedTransactionList;
 
-  //debt overall
-  int _debtSum = 0;
-  int _debtCount = 0;
+  int debtLiveCount = 0;
+  double debtLiveSum = 0.0;
+  DebtTool debtTool = DebtTool();
 
-  void debt() async {
-    _debtSum = 0;
-    _debtCount = 0;
-    QuerySnapshot<Map<String, dynamic>> querySnapshot =
-        await FirebaseFirestore.instance.collection('debt').get();
-    for (var doc in querySnapshot.docs) {
-      _debtSum += int.parse(doc.data()['amount'].toString());
-      _debtCount = _debtCount + 1;
-    }
-    notifyListeners();
+  Future<void> liveDebtCount() async {
+    debtLiveCount = await debtTool.liveDebtCounts();
+    notifyListeners(); // Notify listeners that the debt count is updated
   }
 
-  int get debtCount => _debtCount;
+  Future<void> liveDebtSum() async {
+    debtLiveSum = await debtTool.liveDebtSums();
+    notifyListeners(); // Notify listeners that the debt count is updated
+  }
 
-  int get debtSum => _debtSum;
+  int debtClosedCount = 0;
+  double debtClosedSum = 0.0;
+
+  Future<void> closedDebtCount() async {
+    debtClosedCount = await debtTool.closedDebtCounts();
+    notifyListeners(); // Notify listeners that the debt count is updated
+  }
+
+  Future<void> closedDebtSum() async {
+    debtClosedSum = await debtTool.closedDebtSums();
+    notifyListeners(); // Notify listeners that the debt count is updated
+  }
 
   //User
-  int _userDebtSum = 0;
-  int _userDebtCount = 0;
 
-  int get userDebtSum => _userDebtSum;
+  UserTool userTool = UserTool();
+  int userLiveDebtCount = 0;
+  int userClosedDebtCount = 0;
+  double userLiveDebtSum = 0.0;
+  double userClosedDebtSum = 0.0;
 
-  int get userDebtCount => _userDebtCount;
+  Future<void> userLiveDebtCounts(String name) async {
+    userLiveDebtCount = await userTool.userLiveDebtCounts(name);
+    notifyListeners(); // Notify listeners that the debt count is updated
+  }
+
+  Future<void> userLiveDebtSums(String name) async {
+    userLiveDebtSum = await userTool.userLiveDebtSums(name);
+    notifyListeners(); // Notify listeners that the debt count is updated
+  }
+
+  Future<void> userClosedDebtCounts(String name) async {
+    userClosedDebtCount = await userTool.userClosedDebtCounts(name);
+    notifyListeners(); // Notify listeners that the debt count is updated
+  }
+
+  Future<void> userClosedDebtSums(String name) async {
+    userClosedDebtSum = await userTool.userClosedDebtSums(name);
+    notifyListeners(); // Notify listeners that the debt count is updated
+  }
 }
-
-// List<Debt> get userLiveDebtList => _userLiveDebtList;
-
-// void fetchDebtLiveTransactionList() async {
-//   _debtLiveTransactionList.clear();
-//   _debtClosedTransactionList.clear();
-//   try {
-//     DebtTool tools = DebtTool();
-//     List<Debt> transactions = await tools.fetchLiveDebtTransaction();
-//     // print('Fetched Transactions: $transactions');
-//     _debtLiveTransactionList.addAll(transactions);
-//     notifyListeners(); // Notify listeners after adding transactions
-//   } catch (error) {
-//     print('Error fetching transactions: $error');
-//   }
-// }

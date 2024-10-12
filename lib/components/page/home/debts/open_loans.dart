@@ -18,14 +18,12 @@ class _OpenLoansState extends State<OpenLoans> {
   @override
   void initState() {
     super.initState();
+    fetchData();
+  }
 
-    // Provider.of<Global>(context, listen: false).fetchUserDebtList(widget.name);
-
-    // Simulating a delay before loading the data
-    Future.delayed(const Duration(seconds: 10), () {
-      setState(() {
-        isLoading = false; // After the delay, change the loading state
-      });
+  void fetchData() async {
+    setState(() {
+      isLoading = false;
     });
   }
 
@@ -37,10 +35,11 @@ class _OpenLoansState extends State<OpenLoans> {
           return const Center(child: CircularProgressIndicator());
         }
 
-        // After the delay, check if the list is empty
+        // After the data is fetched, check if the list is empty
         if (global.debtLiveTransactionList.isEmpty) {
           return const Center(child: Text('No live loans are available.'));
         }
+
         return ListView.builder(
           shrinkWrap: true,
           itemCount: global.debtLiveTransactionList.length,
