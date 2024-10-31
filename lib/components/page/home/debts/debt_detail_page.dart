@@ -29,7 +29,9 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
     return Consumer<Global>(
       builder: (context, global, child) => Scaffold(
         appBar: AppBar(
-          title: const Text('Debt Details'),
+          title: Text(
+            showFirstView ? 'Live Debt details' : 'Closed Debt details',
+          ),
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -48,11 +50,6 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                           children: [
                             Column(
                               children: [
-                                Text(
-                                  showFirstView
-                                      ? 'Live Debt details'
-                                      : 'Closed Debt details',
-                                ),
                                 Text(
                                     'Count: ${showFirstView ? global.debtLiveCount : global.debtClosedCount}'),
                                 Text(

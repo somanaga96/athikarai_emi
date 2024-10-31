@@ -47,7 +47,9 @@ class _UserLoansState extends State<UserLoans> {
                         child: Column(
                           children: [
                             Text(
-                              showFirstView ? 'Live Debt details' : 'Closed Debt details',
+                              showFirstView
+                                  ? 'Live Debt details'
+                                  : 'Closed Debt details',
                             ),
                             Text(
                                 'Count :${showFirstView ? global.userLiveDebtCount : global.userClosedDebtCount}'),

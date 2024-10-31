@@ -19,6 +19,8 @@ class _UserLiveLoansState extends State<UserLiveLoans> {
   @override
   void initState() {
     super.initState();
+    Provider.of<Global>(context, listen: false).fetchUserDebtList(widget.name);
+    // fetchUserDebtList
     fetchData();
   }
 
