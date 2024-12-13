@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'debt_class.dart';
+import 'debt_entity.dart';
 
 class DebtTool extends ChangeNotifier {
   //live debt count

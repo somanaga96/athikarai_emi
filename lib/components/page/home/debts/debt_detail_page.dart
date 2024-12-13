@@ -1,4 +1,5 @@
 import 'package:athikarai_emi/components/page/home/debts/closed_loans.dart';
+import 'package:athikarai_emi/components/page/home/user_debt/user_crud.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,20 +7,22 @@ import '../../../utils/global.dart';
 import 'open_loans.dart';
 
 class DebtDetailPage extends StatefulWidget {
-  const DebtDetailPage({super.key});
+  final String debtStatus;
+
+  const DebtDetailPage({super.key, required this.debtStatus});
 
   @override
   State<DebtDetailPage> createState() => _DebtDetailPageState();
 }
 
 class _DebtDetailPageState extends State<DebtDetailPage> {
-  // Move the showFirstView to the state of the widget
-  bool showFirstView = true;
+  UserCrud userCrud = new UserCrud();
+  late bool showFirstView;
 
   @override
   void initState() {
     super.initState();
-    // Provider.of<Global>(context, listen: false).debt();
+    showFirstView = widget.debtStatus == 'Live Debt';
     Provider.of<Global>(context, listen: false).fetchDebtList();
   }
 
@@ -30,7 +33,7 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
       builder: (context, global, child) => Scaffold(
         appBar: AppBar(
           title: Text(
-            showFirstView ? 'Live Debt details' : 'Closed Debt details',
+            showFirstView ? 'Live Debt Details' : 'Closed Debt Details',
           ),
         ),
         body: SingleChildScrollView(
@@ -48,14 +51,10 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                         height: screenSize.height / 10,
                         child: Column(
                           children: [
-                            Column(
-                              children: [
-                                Text(
-                                    'Count: ${showFirstView ? global.debtLiveCount : global.debtClosedCount}'),
-                                Text(
-                                    'Amount: ${showFirstView ? global.debtLiveSum : global.debtClosedSum}'),
-                              ],
-                            )
+                            Text(
+                                'Count: ${showFirstView ? global.debtLiveCount : global.debtClosedCount}'),
+                            Text(
+                                'Amount: ${showFirstView ? global.debtLiveSum : global.debtClosedSum}'),
                           ],
                         ),
                       ),
@@ -91,7 +90,6 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
                     child: SizedBox(
                       width: screenSize.width,
                       height: screenSize.height / 2,
-                      // Adjust height as needed
                       child: const ClosedLoans(),
                     ),
                   ),
@@ -99,6 +97,10 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
               ),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => userCrud.createOrUpdateDebt(context),
+          child: const Icon(Icons.add),
         ),
       ),
     );

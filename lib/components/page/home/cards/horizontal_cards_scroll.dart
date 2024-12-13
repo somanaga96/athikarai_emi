@@ -45,7 +45,9 @@ class _CardHorizontalScrollViewState extends State<CardHorizontalScrollView> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const DebtDetailPage(),
+                    builder: (context) => const DebtDetailPage(
+                      debtStatus: 'Live Debt',
+                    ),
                   ),
                 );
               },
@@ -60,7 +62,9 @@ class _CardHorizontalScrollViewState extends State<CardHorizontalScrollView> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const DebtDetailPage(),
+                    builder: (context) => const DebtDetailPage(
+                      debtStatus: 'Closed Debt',
+                    ),
                   ),
                 );
               },

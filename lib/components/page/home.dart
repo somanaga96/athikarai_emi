@@ -17,6 +17,8 @@ class _HomeState extends State<Home> {
     Provider.of<Global>(context, listen: false).transactionTotal();
     Provider.of<Global>(context, listen: false).liveDebtCount();
     Provider.of<Global>(context, listen: false).liveDebtSum();
+    Provider.of<Global>(context, listen: false).closedDebtCount();
+    Provider.of<Global>(context, listen: false).closedDebtSum();
   }
 
   @override

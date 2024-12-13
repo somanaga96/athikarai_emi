@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/global.dart';
+import '../user_debt/user_crud.dart';
 import '../user_debt/user_loans.dart';
 
 class ClosedLoans extends StatefulWidget {
@@ -29,16 +30,17 @@ class _ClosedLoansState extends State<ClosedLoans> {
 
   @override
   Widget build(BuildContext context) {
+    UserCrud userCrud = UserCrud();
     return Consumer<Global>(
       builder: (context, global, child) {
         if (isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        // After the delay, check if the list is empty
         if (global.debtClosedTransactionList.isEmpty) {
-          return const Center(child: Text('No live loans are available.'));
+          return const Center(child: Text('No closed loans are available.'));
         }
+
         return ListView.builder(
           shrinkWrap: true,
           itemCount: global.debtClosedTransactionList.length,
@@ -63,6 +65,45 @@ class _ClosedLoansState extends State<ClosedLoans> {
                 subtitle: Text(
                   dateAndMonth,
                   style: const TextStyle(fontStyle: FontStyle.italic),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () {
+                        // Call the createOrUpdateDebt function with docId
+                        userCrud.createOrUpdateDebt(
+                          context,
+                          existingDocId:
+                              global.debtClosedTransactionList[index].id,
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () async {
+                        // Call the deleteDebt function with docId
+                        await userCrud.deleteDebt(
+                          global.debtClosedTransactionList[index].id,
+                        );
+                        Provider.of<Global>(context, listen: false)
+                            .fetchDebtList();
+                        Provider.of<Global>(context, listen: false)
+                            .fetchDebtList();
+                        Provider.of<Global>(context, listen: false)
+                            .transactionTotal();
+                        Provider.of<Global>(context, listen: false)
+                            .liveDebtCount();
+                        Provider.of<Global>(context, listen: false)
+                            .liveDebtSum();
+                        Provider.of<Global>(context, listen: false)
+                            .closedDebtCount();
+                        Provider.of<Global>(context, listen: false)
+                            .closedDebtSum();
+                      },
+                    ),
+                  ],
                 ),
                 onTap: () {
                   // Navigate to the DebtDetailsPage when a row is clicked

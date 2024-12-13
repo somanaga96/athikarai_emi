@@ -1,8 +1,8 @@
 import 'package:athikarai_emi/components/page/home/debts/DebtTool.dart';
-import 'package:athikarai_emi/components/page/home/debts/debt_class.dart';
+import 'package:athikarai_emi/components/page/home/debts/debt_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../page/home/user_debt/UserTool.dart';
+import '../page/home/user_debt/DebtTool.dart';
 
 class Global extends ChangeNotifier {
   //Theme data
