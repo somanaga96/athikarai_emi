@@ -1,10 +1,44 @@
 import 'package:athikarai_emi/components/page/home/debts/DebtTool.dart';
 import 'package:athikarai_emi/components/page/home/debts/debt_entity.dart';
+import 'package:athikarai_emi/components/page/home/user/UserTool.dart';
+import 'package:athikarai_emi/components/page/home/user/user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../page/home/user_debt/DebtTool.dart';
 
 class Global extends ChangeNotifier {
+  String _currentUser = '';
+
+  void setUser(String username) {
+    _currentUser = username;
+    notifyListeners(); // Notify listeners if needed
+  }
+
+  String getUser() {
+    return _currentUser;
+  }
+
+//list of Users
+  List<User> _customerList = [];
+
+  void fetchCustomerList() async {
+    _customerList.clear(); // Clear the list to avoid duplicates
+    try {
+      UserTool tool = UserTool(); // Assuming this fetches user data
+      List<User> liveTransactions = await tool.fetchUserList();
+      _customerList
+          .addAll(liveTransactions); // Add the fetched users to the list
+      print(
+          'Customer list: $_customerList'); // Print the customer list in console
+      notifyListeners(); // Notify listeners to rebuild UI
+    } catch (error) {
+      print('Error fetching users: $error'); // Handle errors gracefully
+    }
+  }
+
+// Getter to access the customer list
+  List<User> get customerList => _customerList;
+
   //Theme data
   bool _isDarkMode = true;
 
@@ -83,7 +117,7 @@ class Global extends ChangeNotifier {
     _userDebtLiveTransactionList.clear();
     _userDebtClosedTransactionList.clear();
     try {
-      UserTool tool = UserTool();
+      UserDebtTool tool = UserDebtTool();
       List<Debt> liveTransactions =
           await tool.fetchUserDebtLiveTransaction(name);
       List<Debt> closedTransactions =
@@ -130,29 +164,29 @@ class Global extends ChangeNotifier {
 
   //User
 
-  UserTool userTool = UserTool();
+  UserDebtTool userDebtTool = UserDebtTool();
   int userLiveDebtCount = 0;
   int userClosedDebtCount = 0;
   double userLiveDebtSum = 0.0;
   double userClosedDebtSum = 0.0;
 
   Future<void> userLiveDebtCounts(String name) async {
-    userLiveDebtCount = await userTool.userLiveDebtCounts(name);
+    userLiveDebtCount = await userDebtTool.userLiveDebtCounts(name);
     notifyListeners(); // Notify listeners that the debt count is updated
   }
 
   Future<void> userLiveDebtSums(String name) async {
-    userLiveDebtSum = await userTool.userLiveDebtSums(name);
+    userLiveDebtSum = await userDebtTool.userLiveDebtSums(name);
     notifyListeners(); // Notify listeners that the debt count is updated
   }
 
   Future<void> userClosedDebtCounts(String name) async {
-    userClosedDebtCount = await userTool.userClosedDebtCounts(name);
+    userClosedDebtCount = await userDebtTool.userClosedDebtCounts(name);
     notifyListeners(); // Notify listeners that the debt count is updated
   }
 
   Future<void> userClosedDebtSums(String name) async {
-    userClosedDebtSum = await userTool.userClosedDebtSums(name);
+    userClosedDebtSum = await userDebtTool.userClosedDebtSums(name);
     notifyListeners(); // Notify listeners that the debt count is updated
   }
 }

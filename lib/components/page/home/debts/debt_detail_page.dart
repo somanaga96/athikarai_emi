@@ -1,5 +1,5 @@
 import 'package:athikarai_emi/components/page/home/debts/closed_loans.dart';
-import 'package:athikarai_emi/components/page/home/user_debt/user_crud.dart';
+import 'package:athikarai_emi/components/page/home/user_debt/debt_crud.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +16,7 @@ class DebtDetailPage extends StatefulWidget {
 }
 
 class _DebtDetailPageState extends State<DebtDetailPage> {
-  UserCrud userCrud = new UserCrud();
+  DebtCrud debtCrud =  DebtCrud();
   late bool showFirstView;
 
   @override
@@ -99,7 +99,7 @@ class _DebtDetailPageState extends State<DebtDetailPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => userCrud.createOrUpdateDebt(context),
+          onPressed: () => debtCrud.createOrUpdateDebt(context),
           child: const Icon(Icons.add),
         ),
       ),

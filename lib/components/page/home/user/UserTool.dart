@@ -14,15 +14,12 @@ class UserTool extends ChangeNotifier {
       print('Number of documents fetched: ${querySnapshot.docs.length}');
 
       for (var doc in querySnapshot.docs) {
-        DateTime date = (doc.data()['date'] as Timestamp).toDate();
-
         // Create the Debt object
         User yourObject = User(
-          id: doc.id,
-          amount: doc.data()['amount'],
-          name: doc.data()['name'],
-          villageName: doc.data()['village name'],
-        );
+            id: doc.id,
+            name: doc.data()['name'],
+            villageName: doc.data()['village name'],
+            number: doc.data()['number']);
         objectList.add(yourObject);
       }
 
@@ -34,7 +31,7 @@ class UserTool extends ChangeNotifier {
       return objectList;
     } catch (e) {
       // Print any errors for debugging
-      print('Error fetching debt transactions: $e');
+      print('Error fetching user transactions: $e');
       return [];
     }
   }

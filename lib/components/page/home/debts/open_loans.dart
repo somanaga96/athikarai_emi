@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/global.dart';
-import '../user_debt/user_crud.dart';
+import '../user_debt/debt_crud.dart';
 import '../user_debt/user_loans.dart';
 
 class OpenLoans extends StatefulWidget {
@@ -30,9 +30,14 @@ class _OpenLoansState extends State<OpenLoans> {
 
   @override
   Widget build(BuildContext context) {
-    UserCrud userCrud = UserCrud();
+    DebtCrud debtCrud = DebtCrud();
+    Global globals = Global();
+
     return Consumer<Global>(
       builder: (context, global, child) {
+        print('Current user set in open page: ${global.getUser()}');
+        String name = global.getUser();
+        print('Current user set in open page name: $name');
         if (isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -67,43 +72,46 @@ class _OpenLoansState extends State<OpenLoans> {
                   dateAndMonth,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.blue),
-                      onPressed: () {
-                        // Call the createOrUpdateDebt function with docId
-                        userCrud.createOrUpdateDebt(
-                          context,
-                          existingDocId:
-                              global.debtLiveTransactionList[index].id,
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () async {
-                        // Call the deleteDebt function with docId
-                        await userCrud.deleteDebt(
-                          global.debtLiveTransactionList[index].id,
-                        );
-                        Provider.of<Global>(context, listen: false)
-                            .fetchDebtList();
-                        Provider.of<Global>(context, listen: false)
-                            .transactionTotal();
-                        Provider.of<Global>(context, listen: false)
-                            .liveDebtCount();
-                        Provider.of<Global>(context, listen: false)
-                            .liveDebtSum();
-                        Provider.of<Global>(context, listen: false)
-                            .closedDebtCount();
-                        Provider.of<Global>(context, listen: false)
-                            .closedDebtSum();
-                      },
-                    ),
-                  ],
-                ),
+
+                trailing: global.getUser() == 'admin'
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.blue),
+                            onPressed: () {
+                              // Call the createOrUpdateDebt function with docId
+                              debtCrud.createOrUpdateDebt(
+                                context,
+                                existingDocId:
+                                    global.debtLiveTransactionList[index].id,
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () async {
+                              // Call the deleteDebt function with docId
+                              await debtCrud.deleteDebt(
+                                global.debtLiveTransactionList[index].id,
+                              );
+                              Provider.of<Global>(context, listen: false)
+                                  .fetchDebtList();
+                              Provider.of<Global>(context, listen: false)
+                                  .transactionTotal();
+                              Provider.of<Global>(context, listen: false)
+                                  .liveDebtCount();
+                              Provider.of<Global>(context, listen: false)
+                                  .liveDebtSum();
+                              Provider.of<Global>(context, listen: false)
+                                  .closedDebtCount();
+                              Provider.of<Global>(context, listen: false)
+                                  .closedDebtSum();
+                            },
+                          ),
+                        ],
+                      )
+                    : null, // No icons for non-admin users
                 onTap: () {
                   // Navigate to the DebtDetailsPage when a row is clicked
                   Navigator.push(

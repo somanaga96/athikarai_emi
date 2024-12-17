@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../utils/PeriodInput.dart';
 import '../../../utils/global.dart';
 
-class UserCrud extends ChangeNotifier {
+class DebtCrud extends ChangeNotifier {
   final TextEditingController amountController = TextEditingController();
   DateTime dateTime = DateTime.now();
   String name = "";
@@ -14,12 +14,8 @@ class UserCrud extends ChangeNotifier {
       FirebaseFirestore.instance.collection('debt');
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  final List<String> _tenureTypes = [
-    "\u0b95\u0b9f\u0b28 \u0b86\u0bbb\u0bae\u0bcd\u0baa\u0bae\u0bcd",
-    "\u0b95\u0b9f\u0b28 \u0bae\u0bc1\u0b9f\u0bbf\u0bb5\u0bc1"
-  ];
-  String _tenureType =
-      "\u0b95\u0b9f\u0b28 \u0b86\u0bbb\u0bae\u0bcd\u0baa\u0bae\u0bcd";
+  final List<String> _tenureTypes = ["கடன் ஆரம்பம்", "கடன் முடிவு"];
+  String _tenureType = "கடன் ஆரம்பம்";
 
   Future<List<String>> fetchDropdownItems() async {
     try {
@@ -41,16 +37,19 @@ class UserCrud extends ChangeNotifier {
   }) async {
     String dropdownValue = 'தேர்ந்தெடுக்கவும்';
     List<String> dropdownItems = ['தேர்ந்தெடுக்கவும்'];
-    bool _switchValue = false;
+    bool _switchValue = false; // Default value for switch
     bool isLoading = true; // For showing loading indicator
 
+    // Fetch existing data if editing
     if (existingDocId != null) {
       DocumentSnapshot existingDoc = await debt.doc(existingDocId).get();
       amountController.text = existingDoc['amount'].toString();
       dateTime = (existingDoc['date'] as Timestamp).toDate();
+
+      // Ensure correct mapping of tenure type and switch value
       _tenureType = existingDoc['status'] ? _tenureTypes[0] : _tenureTypes[1];
       dropdownValue = existingDoc['name'];
-      _switchValue = existingDoc['status'];
+      _switchValue = existingDoc['status']; // Map status to switch value
     }
 
     await showModalBottomSheet<void>(
@@ -120,7 +119,7 @@ class UserCrud extends ChangeNotifier {
                                 value: value,
                                 child: Text(value),
                               );
-                            }).toList(),
+                            }),
                           ],
                         ),
                   TextField(
@@ -134,6 +133,7 @@ class UserCrud extends ChangeNotifier {
                     switchValue: _switchValue,
                     onSwitchChanged: (value) {
                       modalSetState(() {
+                        // Update tenure type based on switch state
                         _tenureType = value ? _tenureTypes[1] : _tenureTypes[0];
                         _switchValue = value;
                       });
@@ -185,6 +185,7 @@ class UserCrud extends ChangeNotifier {
                             return;
                           }
 
+                          // If editing, update existing document
                           if (existingDocId == null) {
                             await debt.add({
                               'name': dropdownValue,
@@ -205,6 +206,7 @@ class UserCrud extends ChangeNotifier {
                           dateTime = DateTime.now();
                           Navigator.pop(ctx);
 
+                          // Refresh global data
                           Provider.of<Global>(context, listen: false)
                               .fetchDebtList();
                           Provider.of<Global>(context, listen: false)
@@ -237,7 +239,6 @@ class UserCrud extends ChangeNotifier {
   Future<void> deleteDebt(String docId) async {
     try {
       await debt.doc(docId).delete();
-
     } catch (e) {
       print('Error deleting document: $e');
     }

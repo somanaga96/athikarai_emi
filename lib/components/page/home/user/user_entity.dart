@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class User {
   String id; // Firebase document ID field
-  int amount;
+  int number;
   String name;
   String villageName;
 
   User(
       {required this.id,
-      required this.amount,
+      required this.number,
       required this.name,
       required this.villageName}); // Updated constructor
 
@@ -17,7 +17,7 @@ class User {
     return User(
         id: id,
         // Assigning Firebase document ID
-        amount: map['amount'],
+        number: map['number'],
         name: map['name'],
         villageName: map['village name']);
   }

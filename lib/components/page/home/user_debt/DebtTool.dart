@@ -1,10 +1,9 @@
-import 'package:athikarai_emi/components/page/home/user/user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../debts/debt_entity.dart';
 
-class UserTool extends ChangeNotifier {
+class UserDebtTool extends ChangeNotifier {
   //open debt user sum
   double userLiveDebtSum = 0;
 

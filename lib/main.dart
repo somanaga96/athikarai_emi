@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'components/firestore/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'components/page/home/login.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -24,7 +26,8 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: global.getTitle(),
             theme: global.getTheme(),
-            home: const BottomNavigation()));
+            home: const LoginPage()));
+    // home: const BottomNavigation()));
   }
 }
 

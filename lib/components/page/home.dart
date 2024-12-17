@@ -1,3 +1,4 @@
+import 'package:athikarai_emi/components/page/home/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/global.dart';
@@ -27,8 +28,28 @@ class _HomeState extends State<Home> {
       builder: (context, global, child) => Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.lightBlue,
-          title: Center(
-            child: Text(global.getTitle()),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Center(
+                child: Text(global.getTitle()),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Logout'),
+              ),
+            ],
           ),
         ),
         body: const SingleChildScrollView(
