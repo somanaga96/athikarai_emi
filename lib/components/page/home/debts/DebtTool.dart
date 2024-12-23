@@ -81,13 +81,19 @@ class DebtTool extends ChangeNotifier {
       for (var doc in querySnapshot.docs) {
         DateTime date = (doc.data()['date'] as Timestamp).toDate();
 
+        double interestRate = (doc.data()['interestRate'] is int)
+            ? (doc.data()['interestRate'] as int).toDouble()
+            : doc.data()['interestRate'] as double;
+
         // Create the Debt object
         Debt yourObject = Debt(
-            id: doc.id,
-            amount: doc.data()['amount'],
-            date: date,
-            name: doc.data()['name'],
-            status: doc.data()['status']);
+          id: doc.id,
+          amount: doc.data()['amount'],
+          interestRate: interestRate,
+          date: date,
+          name: doc.data()['name'],
+          status: doc.data()['status'],
+        );
         objectList.add(yourObject);
         print('Debt added: ${yourObject.name}, Amount: ${yourObject.amount}');
       }
@@ -100,7 +106,7 @@ class DebtTool extends ChangeNotifier {
       return objectList;
     } catch (e) {
       // Print any errors for debugging
-      print('Error fetching debt transactions: $e');
+      print('Error fetching fetchLiveDebtTransaction: $e');
       return [];
     }
   }
@@ -120,11 +126,15 @@ class DebtTool extends ChangeNotifier {
 
       for (var doc in querySnapshot.docs) {
         DateTime date = (doc.data()['date'] as Timestamp).toDate();
+        double interestRate = (doc.data()['interestRate'] is int)
+            ? (doc.data()['interestRate'] as int).toDouble()
+            : doc.data()['interestRate'] as double;
 
         // Create the Debt object
         Debt yourObject = Debt(
             id: doc.id,
             amount: doc.data()['amount'],
+            interestRate: interestRate,
             date: date,
             name: doc.data()['name'],
             status: doc.data()['status']);
@@ -140,7 +150,7 @@ class DebtTool extends ChangeNotifier {
       return objectList;
     } catch (e) {
       // Print any errors for debugging
-      print('Error fetching debt transactions: $e');
+      print('Error fetching debt fetchClosedDebtTransaction: $e');
       return [];
     }
   }

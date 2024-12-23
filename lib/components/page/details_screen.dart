@@ -11,7 +11,7 @@ class DetailScreen extends StatefulWidget {
   final bool canShow;
   final DateTime dateTime;
 
-  const DetailScreen(
+  DetailScreen(
     this.amount,
     this.rate,
     this.period,

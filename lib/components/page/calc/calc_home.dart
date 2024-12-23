@@ -1,4 +1,3 @@
-import 'package:athikarai_emi/components/page/details_screen.dart';
 import 'package:athikarai_emi/components/page/calc/input_widgets/input.dart';
 import 'package:athikarai_emi/components/page/home/login.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/global.dart';
+import 'calc_tools.dart';
 import 'emi_result.dart';
 import 'input_widgets/custom_button_name.dart';
 import 'input_widgets/period_input.dart';
@@ -18,7 +18,7 @@ class CalcHome extends StatefulWidget {
 }
 
 class _CalcHomeState extends State<CalcHome> {
-  Global global=Global();
+  Global global = Global();
   final List _tenureTypes = ["Months", "Years"];
   String _tenureType = "Months";
   final TextEditingController amount = TextEditingController();
@@ -29,6 +29,7 @@ class _CalcHomeState extends State<CalcHome> {
   bool canShow = false;
   double period = 0;
   DateTime dateTime = DateTime.now();
+  final CalculatorTool calculatorTool = CalculatorTool();
 
   @override
   Widget build(BuildContext context) {
@@ -95,17 +96,38 @@ class _CalcHomeState extends State<CalcHome> {
                       children: [
                         CustomButton(
                           buttonName: "Calculate",
-                          onPressed: _calculate,
+                          onPressed: () => calculatorTool.calculate(
+                              context, amount, months, rate, _tenureType,
+                              (value) {
+                            setState(() {
+                              canShow = value['canShow'];
+                              period = value['period'];
+                            });
+                          }),
                         ),
                         CustomButton(
                           buttonName: "Reset",
-                          onPressed: _reset,
+                          onPressed: () => calculatorTool.reset(() {
+                            setState(() {
+                              rate.text = "12";
+                              months.text = "10";
+                              amount.clear();
+                              canShow = false;
+                            });
+                          }),
                         ),
-                        if (canShow)
-                          CustomButton(
-                            buttonName: "Details",
-                            onPressed: _showDetails,
-                          ),
+                        CustomButton(
+                          buttonName: "Details",
+                          onPressed: () => calculatorTool.showDetails(
+                              context,
+                              amount,
+                              months,
+                              rate,
+                              _tenureType,
+                              canShow,
+                              dateTime,
+                              period),
+                        ),
                       ],
                     ),
                     if (canShow)
@@ -121,55 +143,5 @@ class _CalcHomeState extends State<CalcHome> {
                 ),
               ),
             )));
-  }
-
-  void _calculate() {
-    if (amount.text.isEmpty || months.text.isEmpty || rate.text.isEmpty) {
-      // Show error dialog if any of the fields are empty
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: const Text(
-                'Please fill all fields (Amount, Months, and Interest) to calculate the EMI.'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      setState(() {
-        canShow = true;
-        period = _tenureType == "Years"
-            ? double.parse(months.text) * 12
-            : double.parse(months.text);
-      });
-    }
-  }
-
-  void _reset() {
-    setState(() {
-      rate.text = "12";
-      months.text = "10";
-      amount.clear();
-      canShow = false;
-    });
-  }
-
-  void _showDetails() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            DetailScreen(amount.text, rate.text, period, canShow, dateTime),
-      ),
-    );
   }
 }

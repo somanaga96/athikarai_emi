@@ -8,6 +8,7 @@ import '../../../utils/global.dart';
 
 class DebtCrud extends ChangeNotifier {
   final TextEditingController amountController = TextEditingController();
+  final TextEditingController interestRateController = TextEditingController();
   DateTime dateTime = DateTime.now();
   String name = "";
   final CollectionReference debt =
@@ -128,6 +129,12 @@ class DebtCrud extends ChangeNotifier {
                     decoration: const InputDecoration(
                         labelText: 'விலை', hintText: 'பொருளின் விலை'),
                   ),
+                  TextField(
+                    controller: interestRateController,
+                    keyboardType: const TextInputType.numberWithOptions(),
+                    decoration: const InputDecoration(
+                        labelText: 'வட்டி', hintText: 'வட்டி'),
+                  ),
                   PeriodInput(
                     tenureType: _tenureType,
                     switchValue: _switchValue,
@@ -184,12 +191,24 @@ class DebtCrud extends ChangeNotifier {
                             );
                             return;
                           }
+                          final double? rate =
+                              double.tryParse(amountController.text);
+                          if (rate == null || rate < 0) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text('Please enter a valid interest rate!'),
+                              ),
+                            );
+                            return;
+                          }
 
                           // If editing, update existing document
                           if (existingDocId == null) {
                             await debt.add({
                               'name': dropdownValue,
                               'amount': num,
+                              'interestRate': rate,
                               'date': dateTime,
                               'status': _tenureType == _tenureTypes[0],
                             });
@@ -197,6 +216,7 @@ class DebtCrud extends ChangeNotifier {
                             await debt.doc(existingDocId).update({
                               'name': dropdownValue,
                               'amount': num,
+                              'interestRate': rate,
                               'date': dateTime,
                               'status': _tenureType == _tenureTypes[0],
                             });

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/global.dart';
+import '../../details_screen.dart';
 
 class UserLiveLoans extends StatefulWidget {
   final String name;
@@ -46,12 +47,12 @@ class _UserLiveLoansState extends State<UserLiveLoans> {
 
         // If the list has data, display it
         return ListView.builder(
-          shrinkWrap: true,
           itemCount: global.userDebtLiveTransactionList.length,
           itemBuilder: (BuildContext context, int index) {
+            final loan = global.userDebtLiveTransactionList[index];
             final DateFormat formatter = DateFormat('d-MMM-yy');
-            String dateAndMonth = formatter
-                .format(global.userDebtLiveTransactionList[index].date);
+            String dateAndMonth = formatter.format(loan.date);
+
             return Container(
               margin: const EdgeInsets.all(3),
               decoration: BoxDecoration(
@@ -60,15 +61,27 @@ class _UserLiveLoansState extends State<UserLiveLoans> {
               ),
               child: ListTile(
                 title: Text(
-                  '${global.userDebtLiveTransactionList[index].name} : ${global.userDebtLiveTransactionList[index].amount}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  '${loan.name} : ${loan.amount}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
                   dateAndMonth,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailScreen(
+                        loan.amount.toString(),
+                        loan.interestRate.toString(),
+                        10,
+                        true,
+                        loan.date,
+                      ),
+                    ),
+                  );
+                },
               ),
             );
           },

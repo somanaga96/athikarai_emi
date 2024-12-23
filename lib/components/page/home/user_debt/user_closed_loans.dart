@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/global.dart';
+import '../../details_screen.dart';
 
 class UsedClosedLoans extends StatefulWidget {
   final String name;
@@ -49,6 +50,7 @@ class _UsedClosedLoansState extends State<UsedClosedLoans> {
           shrinkWrap: true,
           itemCount: global.userDebtClosedTransactionList.length,
           itemBuilder: (BuildContext context, int index) {
+            final loan = global.userDebtClosedTransactionList[index];
             final DateFormat formatter = DateFormat('d-MMM-yy');
             String dateAndMonth = formatter
                 .format(global.userDebtClosedTransactionList[index].date);
@@ -69,6 +71,20 @@ class _UsedClosedLoansState extends State<UsedClosedLoans> {
                   dateAndMonth,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailScreen(
+                        loan.amount.toString(),
+                        loan.interestRate.toString(),
+                        10,
+                        true,
+                        loan.date,
+                      ),
+                    ),
+                  );
+                },
               ),
             );
           },
