@@ -192,7 +192,7 @@ class DebtCrud extends ChangeNotifier {
                             return;
                           }
                           final double? rate =
-                              double.tryParse(amountController.text);
+                              double.tryParse(interestRateController.text);
                           if (rate == null || rate < 0) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
