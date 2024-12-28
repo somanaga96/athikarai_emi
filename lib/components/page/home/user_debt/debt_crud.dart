@@ -15,8 +15,11 @@ class DebtCrud extends ChangeNotifier {
       FirebaseFirestore.instance.collection('debt');
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  final List<String> _tenureTypes = ["கடன் ஆரம்பம்", "கடன் முடிவு"];
-  String _tenureType = "கடன் ஆரம்பம்";
+  final List<String> _tenureTypes = [
+    "கடன் ஆரம்பம்",
+    "கடன் முடிவு",
+  ];
+  String _tenureType = "Loan Start";
 
   Future<List<String>> fetchDropdownItems() async {
     try {
@@ -38,19 +41,17 @@ class DebtCrud extends ChangeNotifier {
   }) async {
     String dropdownValue = 'தேர்ந்தெடுக்கவும்';
     List<String> dropdownItems = ['தேர்ந்தெடுக்கவும்'];
-    bool _switchValue = false; // Default value for switch
-    bool isLoading = true; // For showing loading indicator
+    bool isLoading = true;
+    bool _switchValue = false;
 
-    // Fetch existing data if editing
     if (existingDocId != null) {
       DocumentSnapshot existingDoc = await debt.doc(existingDocId).get();
       amountController.text = existingDoc['amount'].toString();
+      interestRateController.text = existingDoc['interestRate'].toString();
       dateTime = (existingDoc['date'] as Timestamp).toDate();
-
-      // Ensure correct mapping of tenure type and switch value
-      _tenureType = existingDoc['status'] ? _tenureTypes[0] : _tenureTypes[1];
+      _switchValue = existingDoc['status'];
+      _tenureType = _switchValue ? _tenureTypes[0] : _tenureTypes[1];
       dropdownValue = existingDoc['name'];
-      _switchValue = existingDoc['status']; // Map status to switch value
     }
 
     await showModalBottomSheet<void>(
@@ -84,9 +85,7 @@ class DebtCrud extends ChangeNotifier {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
+                      ? const Center(child: CircularProgressIndicator())
                       : DropdownButton<String>(
                           value: dropdownItems.contains(dropdownValue)
                               ? dropdownValue
@@ -114,35 +113,39 @@ class DebtCrud extends ChangeNotifier {
                                 style: TextStyle(color: Colors.grey),
                               ),
                             ),
-                            ...dropdownItems
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }),
+                            ...dropdownItems.map<DropdownMenuItem<String>>(
+                              (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              },
+                            ),
                           ],
                         ),
                   TextField(
                     controller: amountController,
                     keyboardType: const TextInputType.numberWithOptions(),
                     decoration: const InputDecoration(
-                        labelText: 'விலை', hintText: 'பொருளின் விலை'),
+                      labelText: 'விலை',
+                      hintText: 'பொருளின் விலை',
+                    ),
                   ),
                   TextField(
                     controller: interestRateController,
                     keyboardType: const TextInputType.numberWithOptions(),
                     decoration: const InputDecoration(
-                        labelText: 'வட்டி', hintText: 'வட்டி'),
+                      labelText: 'வட்டி',
+                      hintText: 'வட்டி',
+                    ),
                   ),
                   PeriodInput(
                     tenureType: _tenureType,
                     switchValue: _switchValue,
                     onSwitchChanged: (value) {
                       modalSetState(() {
-                        // Update tenure type based on switch state
-                        _tenureType = value ? _tenureTypes[1] : _tenureTypes[0];
                         _switchValue = value;
+                        _tenureType = value ? _tenureTypes[1] : _tenureTypes[0];
                       });
                     },
                   ),
@@ -173,7 +176,7 @@ class DebtCrud extends ChangeNotifier {
                       ElevatedButton(
                         onPressed: () async {
                           if (amountController.text.trim().isEmpty ||
-                              dropdownValue == 'பெயர் தேர்ந்தெடுக்கவும்') {
+                              dropdownValue == 'தேர்ந்தெடுக்கவும்') {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Please fill all fields!'),
@@ -191,6 +194,7 @@ class DebtCrud extends ChangeNotifier {
                             );
                             return;
                           }
+
                           final double? rate =
                               double.tryParse(interestRateController.text);
                           if (rate == null || rate < 0) {
@@ -203,7 +207,6 @@ class DebtCrud extends ChangeNotifier {
                             return;
                           }
 
-                          // If editing, update existing document
                           if (existingDocId == null) {
                             await debt.add({
                               'name': dropdownValue,
@@ -226,7 +229,6 @@ class DebtCrud extends ChangeNotifier {
                           dateTime = DateTime.now();
                           Navigator.pop(ctx);
 
-                          // Refresh global data
                           Provider.of<Global>(context, listen: false)
                               .fetchDebtList();
                           Provider.of<Global>(context, listen: false)
